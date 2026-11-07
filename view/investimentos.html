@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanboard | Investimentos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="./assets/style.css">
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --sidebar-dark: #111827;
+            --sidebar-dark-2: #1f2937;
+            --primary: #2563eb;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #0f172a;
+            --muted: #64748b;
+            --card: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--sidebar-dark) 0%, var(--sidebar-dark-2) 100%);
+            padding: 1.5rem 1rem;
+            color: white;
+        }
+
+        .nav-link {
+            border-radius: 10px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .nav-link.active {
+            background-color: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.08);
+            color: #fff;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .card-stat {
+            border: none;
+            border-radius: 18px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+            background: var(--card);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.75rem 0 0.25rem;
+        }
+
+        .metric-label {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .invest-chart {
+            width: 100%;
+            height: 260px;
+            border-radius: 12px;
+            background: linear-gradient(to bottom, #f8fbff, #eef6ff);
+            border: 1px solid var(--border);
+        }
+
+        .legend-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .asset-bar {
+            height: 8px;
+            border-radius: 999px;
+            background: #e2e8f0;
+            overflow: hidden;
+        }
+
+        .asset-bar > span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+        }
+
+        .portfolio-ring {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: conic-gradient(#2563eb 0 38%, #10b981 38% 59%, #f59e0b 59% 81%, #a78bfa 81% 100%);
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .portfolio-ring::before {
+            content: "";
+            position: absolute;
+            inset: 18px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .portfolio-ring-label {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            z-index: 1;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+        }
+
+        .mini-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1rem;
+        }
+
+        @media (max-width: 991px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+        }
+
+        .report-panel {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        .report-panel h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .insight-item {
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .insight-item strong {
+            display: block;
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0 0;
+        }
+
+        .report-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .report-list li:last-child {
+            border-bottom: none;
+        }
+
+        .report-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+        }
+
+        .report-badge.success {
+            background: #d1fae5;
+            color: #16a34a;
+        }
+
+        .report-badge.warning {
+            background: #fffbeb;
+            color: #f59e0b;
+        }
+    </style>
+</head>
+<body data-page="investimentos">
+    <div class="layout">
+        <aside class="sidebar d-flex flex-column">
+            <a href="./dashboard.html" class="d-flex align-items-center mb-3 text-white text-decoration-none">
+                <i class="bi bi-wallet2 fs-3 me-2"></i>
+                <span class="fs-4 fw-bold">Finanboard</span>
+            </a>
+
+            <hr class="border border-secondary">
+
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item mb-1">
+                    <a href="./dashboard.html" class="nav-link">
+                        <i class="bi bi-house-door me-2"></i>
+                        Início
+                    </a>
+                </li>
+                <li class="mb-1">
+                    <a href="./investimentos.html" class="nav-link active">
+                        <i class="bi bi-bar-chart me-2"></i>
+                        Investimentos
+                    </a>
+                </li>
+                <li class="mb-1">
+                    <a href="./receitas.html" class="nav-link">
+                        <i class="bi bi-currency-dollar me-2"></i>
+                        Receitas
+                    </a>
+                </li>
+                <li class="mb-1">
+                    <a href="./despesas.html" class="nav-link">
+                        <i class="bi bi-credit-card me-2"></i>
+                        Despesas
+                    </a>
+                </li>
+            </ul>
+
+            <hr class="border border-secondary">
+
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://github.com/mdo.png" alt="Usuário" width="32" height="32" class="rounded-circle me-2">
+                    <strong>Maria</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark shadow">
+                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                    <li><a class="dropdown-item" href="#">Configurações</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="../login/login.html">Sair</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <p class="text-secondary mb-1">Gestão de investimentos</p>
+                    <h1 class="h3 mb-0">Portfólio de ativos</h1>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <select id="investSelect" class="form-select" style="width: 220px;">
+                        <option value="Carteira completa" selected>Carteira completa</option>
+                        <option value="IBOVESPA">IBOVESPA</option>
+                        <option value="Ouro">Ouro</option>
+                        <option value="Fundos imobiliários">Fundos imobiliários</option>
+                        <option value="Ações de dividendos">Ações de dividendos</option>
+                    </select>
+                    <button class="btn btn-primary">+ Novo investimento</button>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card card-stat h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="metric-label">Patrimônio total</span>
+                            <i class="bi bi-bank fs-4 text-primary"></i>
+                        </div>
+                        <p id="patrimonioTotal" class="metric-value">R$ 184.250</p>
+                        <small class="text-success">+12,8% no ano</small>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card card-stat h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="metric-label">Rentabilidade</span>
+                            <i class="bi bi-graph-up-arrow fs-4 text-success"></i>
+                        </div>
+                        <p id="rentabilidadeValue" class="metric-value">8,7%</p>
+                        <small class="text-success">+1,4% este mês</small>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card card-stat h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="metric-label">Evolução do patrimônio</span>
+                            <i class="bi bi-arrow-up-right-square fs-4 text-warning"></i>
+                        </div>
+                        <p id="evolucaoPatrimonio" class="metric-value">R$ 24.900</p>
+                        <small class="text-success">+15,4% em 12 meses</small>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card card-stat h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="metric-label">Disponibilidade</span>
+                            <i class="bi bi-cash-stack fs-4 text-info"></i>
+                        </div>
+                        <p id="disponibilidadeValue" class="metric-value">R$ 21.300</p>
+                        <small class="text-secondary">Pronta para aportes</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-stat p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                    <div>
+                        <h2 class="h5 mb-1">Evolução do patrimônio</h2>
+                        <small class="text-secondary">Comparativo com benchmark</small>
+                    </div>
+                    <div class="d-flex gap-3 align-items-center">
+                        <span><span class="legend-dot" style="background:#2563eb;"></span>Carteira</span>
+                        <span><span class="legend-dot" style="background:#10b981;"></span>IBOVESPA</span>
+                        <span><span class="legend-dot" style="background:#f59e0b;"></span>Ouro</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-8">
+                        <svg class="invest-chart" viewBox="0 0 650 260" preserveAspectRatio="none" aria-label="Gráfico de patrimônio">
+                            <defs>
+                                <linearGradient id="areaOne" x1="0" x2="0" y1="0" y2="1">
+                                    <stop offset="0%" stop-color="#2563eb" stop-opacity="0.30"/>
+                                    <stop offset="100%" stop-color="#2563eb" stop-opacity="0.02"/>
+                                </linearGradient>
+                                <linearGradient id="areaTwo" x1="0" x2="0" y1="0" y2="1">
+                                    <stop offset="0%" stop-color="#10b981" stop-opacity="0.22"/>
+                                    <stop offset="100%" stop-color="#10b981" stop-opacity="0.02"/>
+                                </linearGradient>
+                            </defs>
+
+                            <g stroke="#cbd5e1" stroke-width="1">
+                                <line x1="40" y1="20" x2="610" y2="20"/>
+                                <line x1="40" y1="70" x2="610" y2="70"/>
+                                <line x1="40" y1="120" x2="610" y2="120"/>
+                                <line x1="40" y1="170" x2="610" y2="170"/>
+                                <line x1="40" y1="220" x2="610" y2="220"/>
+                            </g>
+
+                            <g fill="#64748b" font-size="11">
+                                <text x="15" y="224">0</text>
+                                <text x="5" y="174">30k</text>
+                                <text x="5" y="124">60k</text>
+                                <text x="5" y="74">90k</text>
+                                <text x="5" y="24">120k</text>
+                            </g>
+
+                            <path d="M40,200 C90,180 130,150 180,140 S260,115 310,110 S390,80 430,90 S510,60 610,40 L610,220 L40,220 Z" fill="url(#areaOne)" opacity="0.8"/>
+                            <path d="M40,210 C110,200 170,188 220,160 S320,150 360,140 S470,115 610,95 L610,220 L40,220 Z" fill="url(#areaTwo)" opacity="0.65"/>
+
+                            <path d="M40,200 C90,180 130,150 180,140 S260,115 310,110 S390,80 430,90 S510,60 610,40" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M40,210 C110,200 170,188 220,160 S320,150 360,140 S470,115 610,95" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M40,190 C120,170 180,160 240,150 S360,140 420,128 S540,118 610,120" fill="none" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+
+                            <g fill="#334155" font-size="11" font-weight="600">
+                                <text x="40" y="246">Jan</text>
+                                <text x="150" y="246">Fev</text>
+                                <text x="260" y="246">Mar</text>
+                                <text x="370" y="246">Abr</text>
+                                <text x="480" y="246">Mai</text>
+                                <text x="570" y="246">Jun</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="mini-card h-100">
+                            <h3 class="h6 fw-bold mb-3">Resumo da carteira</h3>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Ações</span>
+                                    <strong>38%</strong>
+                                </div>
+                                <div class="asset-bar"><span style="width: 38%; background: #2563eb;"></span></div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Fundos</span>
+                                    <strong>27%</strong>
+                                </div>
+                                <div class="asset-bar"><span style="width: 27%; background: #10b981;"></span></div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Ouro</span>
+                                    <strong>19%</strong>
+                                </div>
+                                <div class="asset-bar"><span style="width: 19%; background: #f59e0b;"></span></div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Renda fixa</span>
+                                    <strong>16%</strong>
+                                </div>
+                                <div class="asset-bar"><span style="width: 16%; background: #a78bfa;"></span></div>
+                            </div>
+
+                            <div class="mt-4 pt-3 border-top">
+                                <p class="text-secondary mb-1">Rentabilidade anual</p>
+                                <h4 class="h4 mb-0 text-success">+18,4%</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-lg-8">
+                    <div class="card card-stat p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="h5 mb-0">Comparativo dos investimentos</h3>
+                            <span class="badge text-bg-light">Últimos 12 meses</span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Investimento</th>
+                                        <th>Valor</th>
+                                        <th>Rentab.</th>
+                                        <th>Variação</th>
+                                        <th>Setor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>IBOVESPA</strong></td>
+                                        <td>R$ 34.800</td>
+                                        <td class="text-success">+14,2%</td>
+                                        <td class="text-success">+2,8%</td>
+                                        <td>Índice</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Ouro</strong></td>
+                                        <td>R$ 22.100</td>
+                                        <td class="text-success">+11,6%</td>
+                                        <td class="text-warning">+0,9%</td>
+                                        <td>Commodity</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Fundos imobiliários</strong></td>
+                                        <td>R$ 26.450</td>
+                                        <td class="text-success">+9,8%</td>
+                                        <td class="text-success">+1,3%</td>
+                                        <td>Imobiliário</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Ações de dividendos</strong></td>
+                                        <td>R$ 39.300</td>
+                                        <td class="text-success">+17,9%</td>
+                                        <td class="text-success">+3,5%</td>
+                                        <td>Renda variável</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Renda fixa</strong></td>
+                                        <td>R$ 61.600</td>
+                                        <td class="text-success">+6,4%</td>
+                                        <td class="text-success">+0,7%</td>
+                                        <td>Fixo</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card card-stat p-4 h-100">
+                        <h3 class="h5 mb-3">Alocação da carteira</h3>
+                        <div class="position-relative mb-4">
+                            <div class="portfolio-ring">
+                                <div class="portfolio-ring-label">67%</div>
+                            </div>
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between px-0">
+                                <span><span class="legend-dot" style="background:#2563eb;"></span>Ações</span>
+                                <strong>38%</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between px-0">
+                                <span><span class="legend-dot" style="background:#10b981;"></span>Fundos</span>
+                                <strong>27%</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between px-0">
+                                <span><span class="legend-dot" style="background:#f59e0b;"></span>Ouro</span>
+                                <strong>19%</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between px-0">
+                                <span><span class="legend-dot" style="background:#a78bfa;"></span>Fixo</span>
+                                <strong>16%</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-stat p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="h5 mb-0">Ativos em destaque</h3>
+                    <a href="#" class="text-primary text-decoration-none">Ver todos</a>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="mini-card">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h4 class="h6 mb-0">PETR4</h4>
+                                <span class="badge text-bg-success">+8,3%</span>
+                            </div>
+                            <p class="mb-1">R$ 38,40</p>
+                            <small class="text-secondary">Petróleo e gás</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mini-card">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h4 class="h6 mb-0">VALE3</h4>
+                                <span class="badge text-bg-success">+10,1%</span>
+                            </div>
+                            <p class="mb-1">R$ 74,20</p>
+                            <small class="text-secondary">Mineração</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mini-card">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h4 class="h6 mb-0">Ouro</h4>
+                                <span class="badge text-bg-warning">+5,6%</span>
+                            </div>
+                            <p class="mb-1">R$ 335,90 / oz</p>
+                            <small class="text-secondary">Proteção cambial</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="report-panel">
+                <h3>Relatório de investimentos</h3>
+                <div class="report-grid">
+                    <div class="insight-item">
+                        <strong>Rentabilidade</strong>
+                        <span class="text-success">+8,7%</span>
+                        <p class="mb-0 mt-2 text-secondary">A carteira está acima da média anual e segue com crescimento estável.</p>
+                    </div>
+                    <div class="insight-item">
+                        <strong>Maior peso</strong>
+                        <span class="text-primary">Ações</span>
+                        <p class="mb-0 mt-2 text-secondary">A maior parcela do patrimônio está em ativos de crescimento e renda variável.</p>
+                    </div>
+                    <div class="insight-item">
+                        <strong>Risco</strong>
+                        <span class="text-warning">Moderado</span>
+                        <p class="mb-0 mt-2 text-secondary">A diversificação reduz a exposição, mas exige acompanhamento constante do mercado.</p>
+                    </div>
+                </div>
+                <ul class="report-list mt-4">
+                    <li>
+                        <span>Patrimônio total</span>
+                        <span class="report-badge success">R$ 184.250</span>
+                    </li>
+                    <li>
+                        <span>Rentabilidade anual</span>
+                        <span class="report-badge success">+12,8%</span>
+                    </li>
+                    <li>
+                        <span>Disponibilidade para aporte</span>
+                        <span class="report-badge warning">R$ 21.300</span>
+                    </li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="./assets/script.js"></script>
+</body>
+</html>

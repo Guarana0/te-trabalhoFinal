@@ -1,66 +1,301 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Finanboard | Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="./assets/style.css">
+    <style>
+        body {
+            min-height: 100vh;
+            background: #f4f7fb;
+            margin: 0;
+            display: block;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 280px;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #111827 0%, #1f2937 100%);
+            padding: 1.5rem 1rem;
+            color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .card-stat {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        .nav-link {
+            border-radius: 10px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .nav-link.active {
+            background-color: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.08);
+            color: #fff;
+        }
+
+        .report-panel {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .insight-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .report-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0 0;
+        }
+
+        .report-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .report-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+        }
+
+        .report-badge.success {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .report-badge.warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+    </style>
 </head>
-<body>
-    <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-            <svg class="bi pe-none me-2" width="40" height="32" aria-hidden="true"><use xlink:href="#bootstrap"></use></svg>
-            <span class="fs-4">Finanboard</span>
-        </a>
-        <hr>
-        <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item">
-                <a href="#" class="nav-link active" aria-current="page">
-                    <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#home"></use></svg>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link text-white">
-                    <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#speedometer2"></use></svg>
-                    
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link text-white">
-                    <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#table"></use></svg>
-                    Orders
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link text-white">
-                    <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#grid"></use></svg>
-                    Products
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link text-white">
-                    <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#people-circle"></use></svg>
-                    Customers
-                </a>
-            </li>
-        </ul>
-        <hr>
-        <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-                <strong>mdo</strong>
+<body data-page="dashboard">
+    <div class="layout">
+        <aside class="sidebar d-flex flex-column">
+            <a href="./dashboard.html" class="d-flex align-items-center mb-3 text-white text-decoration-none">
+                <i class="bi bi-wallet2 fs-3 me-2"></i>
+                <span class="fs-4 fw-bold">Finanboard</span>
             </a>
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                <li><a class="dropdown-item" href="#">New project...</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Sign out</a></li>
+
+            <hr class="border border-secondary">
+
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item mb-1">
+                    <a href="./dashboard.html" class="nav-link active">
+                        <i class="bi bi-house-door me-2"></i>
+                        Início
+                    </a>
+                </li>
+                <li class="mb-1">
+                    <a href="./investimentos.html" class="nav-link">
+                        <i class="bi bi-bar-chart me-2"></i>
+                        Investimentos
+                    </a>
+                </li>
+                <li class="mb-1">
+                    <a href="./receitas.html" class="nav-link">
+                        <i class="bi bi-currency-dollar me-2"></i>
+                        Receitas
+                    </a>
+                </li>
+                <li class="mb-1">
+                    <a href="./despesas.html" class="nav-link">
+                        <i class="bi bi-credit-card me-2"></i>
+                        Despesas
+                    </a>
+                </li>
             </ul>
-        </div>
+
+            <hr class="border border-secondary">
+
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://github.com/mdo.png" alt="Usuário" width="32" height="32" class="rounded-circle me-2">
+                    <strong>Maria</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark shadow">
+                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                    <li><a class="dropdown-item" href="#">Configurações</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="../login/login.html">Sair</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <p class="text-secondary mb-1">Painel financeiro</p>
+                    <h1 class="h3 mb-0">Bem-vindo, Maria</h1>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <select id="dashboardRange" class="form-select" style="width: 180px;">
+                        <option value="6m" selected>Últimos 6 meses</option>
+                        <option value="12m">Últimos 12 meses</option>
+                        <option value="30d">Últimos 30 dias</option>
+                    </select>
+                    <button class="btn btn-primary">+ Nova transação</button>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card card-stat h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-secondary">Saldo</span>
+                            <i class="bi bi-wallet fs-4 text-primary"></i>
+                        </div>
+                        <h2 id="dashboardSaldo" class="mt-3 mb-0">R$ 18.450</h2>
+                        <small class="text-success">+8,4% este mês</small>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card card-stat h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-secondary">Receitas</span>
+                            <i class="bi bi-arrow-up-circle fs-4 text-success"></i>
+                        </div>
+                        <h2 id="dashboardReceitas" class="mt-3 mb-0">R$ 24.800</h2>
+                        <small class="text-success">+12,1% neste mês</small>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card card-stat h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-secondary">Despesas</span>
+                            <i class="bi bi-arrow-down-circle fs-4 text-danger"></i>
+                        </div>
+                        <h2 id="dashboardDespesas" class="mt-3 mb-0">R$ 12.350</h2>
+                        <small class="text-danger">-3,2% neste mês</small>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card card-stat h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-secondary">Investimentos</span>
+                            <i class="bi bi-graph-up-arrow fs-4 text-warning"></i>
+                        </div>
+                        <h2 id="dashboardInvestimentos" class="mt-3 mb-0">R$ 9.200</h2>
+                        <small class="text-success">+5,8% no período</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="card card-stat p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="h5 mb-0">Fluxo de caixa</h3>
+                            <span class="badge text-bg-light">Últimos 6 meses</span>
+                        </div>
+                        <div id="dashboardChart" class="bg-light rounded p-3 text-center text-secondary" style="min-height: 220px; display:flex; align-items:center; justify-content:center;">
+                            Gráfico de fluxo financeiro (em desenvolvimento)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card card-stat p-4 h-100">
+                        <h3 class="h5 mb-3">Categorias</h3>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Casa</span>
+                                <strong>R$ 3.200</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Alimentação</span>
+                                <strong>R$ 1.850</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Transporte</span>
+                                <strong>R$ 980</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Lazer</span>
+                                <strong>R$ 1.120</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <section class="report-panel">
+                <h3>Relatório geral</h3>
+                <div class="report-grid">
+                    <div class="insight-item">
+                        <strong>Situação financeira</strong>
+                        <span class="text-success">Positiva</span>
+                        <p class="mb-0 mt-2 text-secondary">O patrimônio líquido está crescendo e a tendência de fluxo de caixa é favorável.</p>
+                    </div>
+                    <div class="insight-item">
+                        <strong>Maior despesa</strong>
+                        <span class="text-warning">Moradia</span>
+                        <p class="mb-0 mt-2 text-secondary">A maior parcela do orçamento continua voltada para as despesas fixas domiciliares.</p>
+                    </div>
+                    <div class="insight-item">
+                        <strong>Oportunidade</strong>
+                        <span class="text-primary">Investir mais</span>
+                        <p class="mb-0 mt-2 text-secondary">Há espaço para aumentar aportes em investimentos de perfil moderado e longo prazo.</p>
+                    </div>
+                </div>
+                <ul class="report-list mt-4">
+                    <li>
+                        <span>Receita total</span>
+                        <span class="report-badge success">+12,1%</span>
+                    </li>
+                    <li>
+                        <span>Despesas totais</span>
+                        <span class="report-badge warning">-3,2%</span>
+                    </li>
+                    <li>
+                        <span>Saldo disponível</span>
+                        <span class="report-badge success">R$ 18.450</span>
+                    </li>
+                </ul>
+            </section>
+        </main>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="./assets/script.js"></script>
 </body>
 </html>
