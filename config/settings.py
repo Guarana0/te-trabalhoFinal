@@ -50,20 +50,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+LOGIN_URL = '/login/login.html'
+LOGIN_REDIRECT_URL = '/dashboard.html'
+LOGOUT_REDIRECT_URL = '/login/login.html'
 
-# 3. Configuramos o MySQL apontando para o banco 'financeiro'
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'financeiro',
-        'USER': 'root',          # <-- Coloque seu usuário do MySQL
-        'PASSWORD': '',          # <-- Coloque sua senha do MySQL
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

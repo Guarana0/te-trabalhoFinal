@@ -29,31 +29,37 @@
 </head>
 <body>
     <main class="form-signin">
-        <form action="../dashboard.html" method="get">
+        <form action="{% url 'cadastrar' %}" method="post">
+            {% csrf_token %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
             <h1 class="h3 mb-3 fw-normal text-center">Crie sua conta</h1>
 
             <div class="form-floating mb-2">
-                <input type="text" class="form-control" id="floatingNome" placeholder="João" required>
+                <input type="text" class="form-control" id="floatingNome" name="nome" placeholder="João" value="{{ dados.nome }}" autocomplete="given-name" required>
                 <label for="floatingNome">Nome</label>
             </div>
 
             <div class="form-floating mb-2">
-                <input type="text" class="form-control" id="floatingSobrenome" placeholder="Silva" required>
+                <input type="text" class="form-control" id="floatingSobrenome" name="sobrenome" placeholder="Silva" value="{{ dados.sobrenome }}" autocomplete="family-name">
                 <label for="floatingSobrenome">Sobrenome</label>
             </div>
 
             <div class="form-floating mb-2">
-                <input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com" required>
+                <input type="email" class="form-control" id="floatingEmail" name="email" placeholder="name@example.com" value="{{ dados.email }}" autocomplete="email" maxlength="150" required>
                 <label for="floatingEmail">Endereço de email</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Senha" required>
+                <input type="password" class="form-control" id="floatingPassword" name="senha" placeholder="Senha" autocomplete="new-password" required>
                 <label for="floatingPassword">Senha</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="floatingPasswordConfirm" placeholder="Confirmar senha" required>
+                <input type="password" class="form-control" id="floatingPasswordConfirm" name="confirmar_senha" placeholder="Confirmar senha" autocomplete="new-password" required>
                 <label for="floatingPasswordConfirm">Confirmar senha</label>
             </div>
 

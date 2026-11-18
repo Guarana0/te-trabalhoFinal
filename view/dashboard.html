@@ -147,13 +147,18 @@
             <div class="dropdown">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="https://github.com/mdo.png" alt="Usuário" width="32" height="32" class="rounded-circle me-2">
-                    <strong>Maria</strong>
+                    <strong>{{ request.user.first_name|default:request.user.email }}</strong>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark shadow">
                     <li><a class="dropdown-item" href="#">Perfil</a></li>
                     <li><a class="dropdown-item" href="#">Configurações</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="../login/login.html">Sair</a></li>
+                    <li>
+                        <form action="{% url 'sair' %}" method="post" class="m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item">Sair</button>
+                        </form>
+                    </li>
                 </ul>
             </div>
         </aside>
@@ -162,7 +167,7 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <p class="text-secondary mb-1">Painel financeiro</p>
-                    <h1 class="h3 mb-0">Bem-vindo, Maria</h1>
+                    <h1 class="h3 mb-0">Bem-vindo, {{ request.user.first_name|default:request.user.email }}</h1>
                 </div>
                 <div class="d-flex align-items-center gap-2">
                     <select id="dashboardRange" class="form-select" style="width: 180px;">

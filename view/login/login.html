@@ -29,16 +29,23 @@
 </head>
 <body>
     <main class="form-signin">
-        <form action="../dashboard.html" method="get">
+        <form action="{% url 'entrar' %}" method="post">
+            {% csrf_token %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <input type="hidden" name="next" value="{{ next }}">
             <h1 class="h3 mb-3 fw-normal text-center">Faça login</h1>
 
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" required>
+                <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com" autocomplete="email" required>
                 <label for="floatingInput">Endereço de email</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" required>
+                <input type="password" class="form-control" id="floatingPassword" name="senha" placeholder="Senha" autocomplete="current-password" required>
                 <label for="floatingPassword">Senha</label>
             </div>
 

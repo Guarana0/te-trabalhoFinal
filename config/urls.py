@@ -16,7 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.views.generic import RedirectView, TemplateView
+from django.contrib.auth.decorators import login_required
+
+from config import views
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/dashboard.html', permanent=False), name='home'),
+    path('dashboard.html', login_required(TemplateView.as_view(template_name='dashboard.html')), name='dashboard'),
+    path('receitas.html', login_required(TemplateView.as_view(template_name='receitas.html')), name='receitas'),
+    path('despesas.html', login_required(TemplateView.as_view(template_name='despesas.html')), name='despesas'),
+    path('investimentos.html', login_required(views.investimentos), name='investimentos'),
+    path('login/login.html', views.entrar, name='entrar'),
+    path('login/registro.html', views.cadastrar, name='cadastrar'),
+    path('logout/', views.sair, name='sair'),
     path('admin/', admin.site.urls),
 ]

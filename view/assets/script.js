@@ -83,36 +83,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateDashboard('6m');
     }
-
-    if (page === 'investimentos') {
-        const select = document.getElementById('investSelect');
-        const investData = {
-            'Carteira completa': { patrimonio: 'R$ 184.250', rentabilidade: '8,7%', patrimonioEvolucao: 'R$ 24.900', disponibilidade: 'R$ 21.300' },
-            'IBOVESPA': { patrimonio: 'R$ 146.800', rentabilidade: '7,2%', patrimonioEvolucao: 'R$ 18.600', disponibilidade: 'R$ 20.900' },
-            'Ouro': { patrimonio: 'R$ 84.500', rentabilidade: '9,4%', patrimonioEvolucao: 'R$ 12.300', disponibilidade: 'R$ 15.000' },
-            'Fundos imobiliários': { patrimonio: 'R$ 98.200', rentabilidade: '6,8%', patrimonioEvolucao: 'R$ 10.400', disponibilidade: 'R$ 14.700' },
-            'Ações de dividendos': { patrimonio: 'R$ 120.600', rentabilidade: '10,1%', patrimonioEvolucao: 'R$ 16.200', disponibilidade: 'R$ 18.500' }
-        };
-
-        const updateInvestmentInfo = (key) => {
-            const data = investData[key] || investData['Carteira completa'];
-            const map = {
-                patrimonio: document.getElementById('patrimonioTotal'),
-                rentabilidade: document.getElementById('rentabilidadeValue'),
-                patrimonioEvolucao: document.getElementById('evolucaoPatrimonio'),
-                disponibilidade: document.getElementById('disponibilidadeValue')
-            };
-
-            if (map.patrimonio) map.patrimonio.textContent = data.patrimonio;
-            if (map.rentabilidade) map.rentabilidade.textContent = data.rentabilidade;
-            if (map.patrimonioEvolucao) map.patrimonioEvolucao.textContent = data.patrimonioEvolucao;
-            if (map.disponibilidade) map.disponibilidade.textContent = data.disponibilidade;
-        };
-
-        if (select) {
-            select.addEventListener('change', (event) => {
-                updateInvestmentInfo(event.target.value);
-            });
-        }
-    }
 });
