@@ -1,9 +1,9 @@
 # Finanboard
 
 Dashboard financeiro feito com Django e páginas HTML, CSS e JavaScript.
-O cadastro e o login de usuários são reais. A página de investimentos consulta
-preços de ações e fundos na BrAPI, sem exigir token. Os outros valores ainda
-são exemplos e não representam os dados pessoais da conta.
+O cadastro e o login de usuários são reais. O dashboard e os módulos de
+receitas, despesas e carteira usam dados vinculados à conta autenticada.
+Investimentos também exibe preços de referência da B3 consultados pela BrAPI.
 
 ## Rodar localmente
 
@@ -33,6 +33,18 @@ cinco minutos; o botão da página força uma nova consulta. Não precisa criar
 conta nem configurar token. As cotações podem estar atrasadas e não são uma
 oferta ou recomendação de investimento.
 
+Na página de despesas, cada conta pode registrar, consultar, editar e excluir
+seus próprios lançamentos. O painel atualiza os totais, categorias e gráfico
+conforme o período selecionado. O orçamento usado na comparação vem da
+estimativa informada no questionário; não é um dado bancário.
+
+Na página de receitas, cada conta pode registrar, consultar, editar e excluir
+suas entradas. O fluxo líquido considera as receitas e despesas registradas no
+período. Na carteira, é possível cadastrar, consultar, editar e remover ativos
+e acompanhar os valores aplicado e atual. O valor atual da carteira é informado
+manualmente; as cotações da BrAPI são apenas referências e não alteram esses
+registros.
+
 ## Como o código está organizado
 
 - `manage.py`: comando usado para iniciar o Django e executar tarefas do projeto.
@@ -45,12 +57,11 @@ oferta ou recomendação de investimento.
 ## O que os modelos representam
 
 - `Usuario`: nome, e-mail e senha protegida por hash.
-- `Receita`: descrição, categoria, valor e data de uma entrada de dinheiro.
-- `Despesa`: descrição, categoria, valor, data e situação de uma saída.
-- `Investimento`: ativo, tipo, valores aplicado/atual e rentabilidade calculada.
+- `Receita`: descrição, categoria, valor e data de uma entrada de dinheiro, associada à conta autenticada.
+- `Despesa`: descrição, categoria, valor, data e situação de uma saída, associada à conta autenticada.
+- `Investimento`: ativo, tipo, valores aplicado/atual e rentabilidade calculada, associado à conta autenticada.
 - `PerfilFinanceiro`: estimativas do questionário, salvas por usuário.
 
-Os modelos de receitas, despesas e investimentos se relacionam com um usuário.
-O dashboard usa as estimativas do questionário. As telas de receitas e despesas
-ainda usam conteúdo de demonstração; a gravação e consulta dessas transações
-ainda não foram implementadas.
+O painel inicial usa as estimativas do questionário e, quando há ativos
+cadastrados, mostra o valor atual da carteira. Receitas, despesas e ativos da
+carteira são registros independentes por conta.

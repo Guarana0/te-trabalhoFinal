@@ -199,7 +199,7 @@
                             <i class="bi bi-arrow-up-circle fs-4 text-success"></i>
                         </div>
                         <h2 class="mt-3 mb-0">{{ renda_mensal }}</h2>
-                        <small class="text-secondary">Valor informado por você</small>
+                        <small class="text-secondary">{{ origem_receita }}</small>
                     </div>
                 </div>
 
@@ -210,7 +210,7 @@
                             <i class="bi bi-arrow-down-circle fs-4 text-danger"></i>
                         </div>
                         <h2 class="mt-3 mb-0">{{ despesas_mensais }}</h2>
-                        <small class="text-secondary">Valor informado por você</small>
+                        <small class="text-secondary">{{ origem_despesas }}</small>
                     </div>
                 </div>
 
@@ -221,7 +221,7 @@
                             <i class="bi bi-graph-up-arrow fs-4 text-warning"></i>
                         </div>
                         <h2 class="mt-3 mb-0">{{ investimentos }}</h2>
-                        <small class="text-secondary">Total que você informou</small>
+                        <small class="text-secondary">{{ origem_investimentos }}</small>
                     </div>
                 </div>
             </div>
@@ -230,7 +230,7 @@
                 <div class="col-lg-8">
                     <div class="card card-stat p-4 h-100">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h3 class="h5 mb-0">Resumo do mês informado</h3>
+                            <h3 class="h5 mb-0">Resumo do mês</h3>
                             <span class="badge text-bg-light">Estimativa</span>
                         </div>
                         <div class="mb-4">
@@ -270,10 +270,10 @@
                     <div class="insight-item">
                         <strong>Situação financeira</strong>
                         <span class="text-{{ classe_situacao }}">{{ situacao_financeira }}</span>
-                        {% if perfil.renda_mensal >= perfil.despesas_mensais %}
-                            <p class="mb-0 mt-2 text-secondary">Pelos valores informados, sua receita cobre as despesas mensais.</p>
+                        {% if renda_valor >= despesas_valor %}
+                            <p class="mb-0 mt-2 text-secondary">Com base nos lançamentos e estimativas disponíveis, sua receita cobre as despesas mensais.</p>
                         {% else %}
-                            <p class="mb-0 mt-2 text-secondary">Pelos valores informados, suas despesas estão acima da receita mensal.</p>
+                            <p class="mb-0 mt-2 text-secondary">Com base nos lançamentos e estimativas disponíveis, suas despesas estão acima da receita mensal.</p>
                         {% endif %}
                     </div>
                     <div class="insight-item">
@@ -284,7 +284,7 @@
                     <div class="insight-item">
                         <strong>Investimentos atuais</strong>
                         <span class="text-primary">{{ investimentos }}</span>
-                        <p class="mb-0 mt-2 text-secondary">Total aproximado informado no questionário.</p>
+                        <p class="mb-0 mt-2 text-secondary">{{ origem_investimentos }}.</p>
                     </div>
                 </div>
                 <ul class="report-list mt-4">

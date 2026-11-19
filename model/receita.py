@@ -1,16 +1,26 @@
 from django.db import models
-from .usuario import Usuario
+from django.conf import settings
 
 
 class Receita(models.Model):
+    CATEGORIAS = [
+        ('Salário', 'Salário'),
+        ('Trabalho autônomo', 'Trabalho autônomo'),
+        ('Investimentos', 'Investimentos'),
+        ('Aluguel', 'Aluguel'),
+        ('Benefícios', 'Benefícios'),
+        ('Vendas', 'Vendas'),
+        ('Outros', 'Outros'),
+    ]
+
     usuario = models.ForeignKey(
-        Usuario,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='receitas',
         db_column='usuario_id'
     )
     descricao = models.CharField(max_length=150)
-    categoria = models.CharField(max_length=80)
+    categoria = models.CharField(max_length=80, choices=CATEGORIAS)
     valor = models.DecimalField(max_digits=10, decimal_places=2)
     data = models.DateField()
     observacao = models.TextField(null=True, blank=True)

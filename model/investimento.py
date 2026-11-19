@@ -1,5 +1,5 @@
 from django.db import models
-from .usuario import Usuario
+from django.conf import settings
 
 
 class Investimento(models.Model):
@@ -12,7 +12,7 @@ class Investimento(models.Model):
     ]
 
     usuario = models.ForeignKey(
-        Usuario,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='investimentos',
         db_column='usuario_id'
