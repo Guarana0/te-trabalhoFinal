@@ -144,6 +144,12 @@
 
             <hr class="border border-secondary">
 
+            <button type="button" class="tema-botao mb-3" data-botao-tema role="switch" aria-label="Tema escuro" aria-checked="false">
+                <span class="tema-trilho" aria-hidden="true"></span>
+                <i class="bi bi-moon-stars-fill" data-icone-tema aria-hidden="true"></i>
+                <span>Tema escuro</span>
+            </button>
+
             <div class="dropdown">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="https://github.com/mdo.png" alt="Usuário" width="32" height="32" class="rounded-circle me-2">
@@ -170,12 +176,7 @@
                     <h1 class="h3 mb-0">Bem-vindo, {{ request.user.first_name|default:request.user.email }}</h1>
                 </div>
                 <div class="d-flex align-items-center gap-2">
-                    <select id="dashboardRange" class="form-select" style="width: 180px;">
-                        <option value="6m" selected>Últimos 6 meses</option>
-                        <option value="12m">Últimos 12 meses</option>
-                        <option value="30d">Últimos 30 dias</option>
-                    </select>
-                    <button class="btn btn-primary">+ Nova transação</button>
+                    <a href="{% url 'questionario' %}" class="btn btn-outline-primary">Editar meu perfil</a>
                 </div>
             </div>
 
@@ -183,33 +184,33 @@
                 <div class="col-md-3">
                     <div class="card card-stat h-100 p-3">
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-secondary">Saldo</span>
+                            <span class="text-secondary">Saldo mensal estimado</span>
                             <i class="bi bi-wallet fs-4 text-primary"></i>
                         </div>
-                        <h2 id="dashboardSaldo" class="mt-3 mb-0">R$ 18.450</h2>
-                        <small class="text-success">+8,4% este mês</small>
+                        <h2 class="mt-3 mb-0">{{ saldo_mensal }}</h2>
+                        <small class="text-secondary">Receita menos despesas informadas</small>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <div class="card card-stat h-100 p-3">
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-secondary">Receitas</span>
+                            <span class="text-secondary">Receita mensal</span>
                             <i class="bi bi-arrow-up-circle fs-4 text-success"></i>
                         </div>
-                        <h2 id="dashboardReceitas" class="mt-3 mb-0">R$ 24.800</h2>
-                        <small class="text-success">+12,1% neste mês</small>
+                        <h2 class="mt-3 mb-0">{{ renda_mensal }}</h2>
+                        <small class="text-secondary">Valor informado por você</small>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <div class="card card-stat h-100 p-3">
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-secondary">Despesas</span>
+                            <span class="text-secondary">Despesas mensais</span>
                             <i class="bi bi-arrow-down-circle fs-4 text-danger"></i>
                         </div>
-                        <h2 id="dashboardDespesas" class="mt-3 mb-0">R$ 12.350</h2>
-                        <small class="text-danger">-3,2% neste mês</small>
+                        <h2 class="mt-3 mb-0">{{ despesas_mensais }}</h2>
+                        <small class="text-secondary">Valor informado por você</small>
                     </div>
                 </div>
 
@@ -219,8 +220,8 @@
                             <span class="text-secondary">Investimentos</span>
                             <i class="bi bi-graph-up-arrow fs-4 text-warning"></i>
                         </div>
-                        <h2 id="dashboardInvestimentos" class="mt-3 mb-0">R$ 9.200</h2>
-                        <small class="text-success">+5,8% no período</small>
+                        <h2 class="mt-3 mb-0">{{ investimentos }}</h2>
+                        <small class="text-secondary">Total que você informou</small>
                     </div>
                 </div>
             </div>
@@ -229,36 +230,36 @@
                 <div class="col-lg-8">
                     <div class="card card-stat p-4 h-100">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h3 class="h5 mb-0">Fluxo de caixa</h3>
-                            <span class="badge text-bg-light">Últimos 6 meses</span>
+                            <h3 class="h5 mb-0">Resumo do mês informado</h3>
+                            <span class="badge text-bg-light">Estimativa</span>
                         </div>
-                        <div id="dashboardChart" class="bg-light rounded p-3 text-center text-secondary" style="min-height: 220px; display:flex; align-items:center; justify-content:center;">
-                            Gráfico de fluxo financeiro (em desenvolvimento)
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Despesas em relação à receita</span>
+                                    <strong>
+                                        {% if percentual_despesas is not None %}
+                                            {{ percentual_despesas }}%
+                                        {% else %}
+                                            Sem receita informada
+                                        {% endif %}
+                                    </strong>
+                                </div>
+                                <div class="progress" role="progressbar" aria-label="Despesas em relação à receita" aria-valuenow="{{ largura_despesas }}" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar bg-primary" style="width: {{ largura_despesas }}%"></div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between border-top pt-3">
+                            <span class="text-secondary">Quanto sobra após as despesas</span>
+                            <strong>{{ saldo_mensal }}</strong>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-lg-4">
                     <div class="card card-stat p-4 h-100">
-                        <h3 class="h5 mb-3">Categorias</h3>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Casa</span>
-                                <strong>R$ 3.200</strong>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Alimentação</span>
-                                <strong>R$ 1.850</strong>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Transporte</span>
-                                <strong>R$ 980</strong>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Lazer</span>
-                                <strong>R$ 1.120</strong>
-                            </li>
-                        </ul>
+                        <h3 class="h5 mb-3">Seu principal objetivo</h3>
+                        <p class="fs-5">{{ perfil.get_objetivo_display }}</p>
+                        <p class="text-secondary mb-0">Você pode atualizar suas respostas quando quiser pelo botão “Editar meu perfil”.</p>
                     </div>
                 </div>
             </div>
@@ -268,32 +269,36 @@
                 <div class="report-grid">
                     <div class="insight-item">
                         <strong>Situação financeira</strong>
-                        <span class="text-success">Positiva</span>
-                        <p class="mb-0 mt-2 text-secondary">O patrimônio líquido está crescendo e a tendência de fluxo de caixa é favorável.</p>
+                        <span class="text-{{ classe_situacao }}">{{ situacao_financeira }}</span>
+                        {% if perfil.renda_mensal >= perfil.despesas_mensais %}
+                            <p class="mb-0 mt-2 text-secondary">Pelos valores informados, sua receita cobre as despesas mensais.</p>
+                        {% else %}
+                            <p class="mb-0 mt-2 text-secondary">Pelos valores informados, suas despesas estão acima da receita mensal.</p>
+                        {% endif %}
                     </div>
                     <div class="insight-item">
-                        <strong>Maior despesa</strong>
-                        <span class="text-warning">Moradia</span>
-                        <p class="mb-0 mt-2 text-secondary">A maior parcela do orçamento continua voltada para as despesas fixas domiciliares.</p>
+                        <strong>Objetivo informado</strong>
+                        <span class="text-primary">{{ perfil.get_objetivo_display }}</span>
+                        <p class="mb-0 mt-2 text-secondary">Este objetivo ajuda a deixar seu painel mais alinhado ao que você busca.</p>
                     </div>
                     <div class="insight-item">
-                        <strong>Oportunidade</strong>
-                        <span class="text-primary">Investir mais</span>
-                        <p class="mb-0 mt-2 text-secondary">Há espaço para aumentar aportes em investimentos de perfil moderado e longo prazo.</p>
+                        <strong>Investimentos atuais</strong>
+                        <span class="text-primary">{{ investimentos }}</span>
+                        <p class="mb-0 mt-2 text-secondary">Total aproximado informado no questionário.</p>
                     </div>
                 </div>
                 <ul class="report-list mt-4">
                     <li>
-                        <span>Receita total</span>
-                        <span class="report-badge success">+12,1%</span>
+                        <span>Receita mensal</span>
+                        <span class="report-badge success">{{ renda_mensal }}</span>
                     </li>
                     <li>
-                        <span>Despesas totais</span>
-                        <span class="report-badge warning">-3,2%</span>
+                        <span>Despesas mensais</span>
+                        <span class="report-badge warning">{{ despesas_mensais }}</span>
                     </li>
                     <li>
-                        <span>Saldo disponível</span>
-                        <span class="report-badge success">R$ 18.450</span>
+                        <span>Saldo mensal estimado</span>
+                        <span class="report-badge success">{{ saldo_mensal }}</span>
                     </li>
                 </ul>
             </section>

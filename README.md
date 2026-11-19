@@ -18,7 +18,9 @@ python manage.py runserver
 ```
 
 Abra <http://127.0.0.1:8000/> e crie uma conta ou entre com seu e-mail e senha.
-Depois do login, você terá acesso ao dashboard. Também é possível abrir
+No primeiro acesso, responda ao questionário de renda, despesas, investimentos
+e objetivo financeiro. O dashboard usa essas estimativas; elas podem ser
+atualizadas pelo botão “Editar meu perfil”. Também é possível abrir
 `/login/login.html`, `/login/registro.html`, `/receitas.html`, `/despesas.html`
 e `/investimentos.html`.
 
@@ -46,7 +48,9 @@ oferta ou recomendação de investimento.
 - `Receita`: descrição, categoria, valor e data de uma entrada de dinheiro.
 - `Despesa`: descrição, categoria, valor, data e situação de uma saída.
 - `Investimento`: ativo, tipo, valores aplicado/atual e rentabilidade calculada.
+- `PerfilFinanceiro`: estimativas do questionário, salvas por usuário.
 
 Os modelos de receitas, despesas e investimentos se relacionam com um usuário.
-O dashboard e as telas de receitas e despesas ainda usam conteúdo de
-demonstração; a gravação e consulta de transações ainda não foram implementadas.
+O dashboard usa as estimativas do questionário. As telas de receitas e despesas
+ainda usam conteúdo de demonstração; a gravação e consulta dessas transações
+ainda não foram implementadas.

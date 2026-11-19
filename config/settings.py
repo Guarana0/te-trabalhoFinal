@@ -17,7 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'model',  # <-- Sua pasta onde ficará o models.py
+    'model.apps.ModelConfig',
 ]
 
 MIDDLEWARE = [

@@ -15,6 +15,9 @@ from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_http_methods, require_POST
 
+from config.forms import FormularioPerfilFinanceiro
+from model.perfil_financeiro import PerfilFinanceiro
+
 logger = logging.getLogger(__name__)
 ATIVOS_B3 = ('PETR4', 'VALE3', 'ITUB4', 'B3SA3', 'BOVA11', 'HGLG11')
 
@@ -33,6 +36,8 @@ def _url_de_destino(request):
 @require_http_methods(['GET', 'POST'])
 def entrar(request):
     if request.user.is_authenticated:
+        if not PerfilFinanceiro.objects.filter(usuario=request.user).exists():
+            return redirect('questionario')
         return redirect(_url_de_destino(request))
 
     if request.method == 'POST':
@@ -42,6 +47,9 @@ def entrar(request):
 
         if usuario:
             login(request, usuario)
+            if not PerfilFinanceiro.objects.filter(usuario=usuario).exists():
+                request.session['apos_questionario'] = _url_de_destino(request)
+                return redirect('questionario')
             return redirect(_url_de_destino(request))
 
         messages.error(request, 'E-mail ou senha inválidos.')
@@ -111,7 +119,8 @@ def cadastrar(request):
             last_name=sobrenome,
         )
         login(request, usuario)
-        return redirect('dashboard')
+        request.session['apos_questionario'] = reverse('dashboard')
+        return redirect('questionario')
 
     return render(request, 'login/registro.html')
 
@@ -120,6 +129,62 @@ def cadastrar(request):
 def sair(request):
     logout(request)
     return redirect('entrar')
+
+
+@require_http_methods(['GET', 'POST'])
+def questionario(request):
+    perfil = PerfilFinanceiro.objects.filter(usuario=request.user).first()
+    formulario = FormularioPerfilFinanceiro(request.POST or None, instance=perfil)
+
+    if request.method == 'POST' and formulario.is_valid():
+        perfil = formulario.save(commit=False)
+        perfil.usuario = request.user
+        perfil.save()
+        destino = request.session.pop('apos_questionario', reverse('dashboard'))
+        if url_has_allowed_host_and_scheme(
+            destino,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        ):
+            return redirect(destino)
+        return redirect('dashboard')
+
+    return render(request, 'questionario.html', {'formulario': formulario})
+
+
+def _formatar_real(valor):
+    valor_formatado = f'{valor:,.2f}'
+    return 'R$ ' + valor_formatado.replace(',', 'X').replace('.', ',').replace('X', '.')
+
+
+def dashboard(request):
+    perfil = PerfilFinanceiro.objects.filter(usuario=request.user).first()
+    if perfil is None:
+        request.session['apos_questionario'] = reverse('dashboard')
+        return redirect('questionario')
+
+    saldo_mensal = perfil.renda_mensal - perfil.despesas_mensais
+    percentual_despesas = None
+    largura_despesas = 0
+    if perfil.renda_mensal:
+        percentual_despesas = int(perfil.despesas_mensais * 100 / perfil.renda_mensal)
+        largura_despesas = min(100, percentual_despesas)
+
+    return render(
+        request,
+        'dashboard.html',
+        {
+            'perfil': perfil,
+            'saldo_mensal': _formatar_real(saldo_mensal),
+            'renda_mensal': _formatar_real(perfil.renda_mensal),
+            'despesas_mensais': _formatar_real(perfil.despesas_mensais),
+            'investimentos': _formatar_real(perfil.investimentos),
+            'percentual_despesas': percentual_despesas,
+            'largura_despesas': largura_despesas,
+            'situacao_financeira': 'Saldo positivo' if saldo_mensal >= 0 else 'Atenção ao orçamento',
+            'classe_situacao': 'success' if saldo_mensal >= 0 else 'warning',
+        },
+    )
 
 
 def investimentos(request):

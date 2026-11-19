@@ -169,6 +169,178 @@ body {
     color: var(--danger);
 }
 
+html[data-tema="escuro"] {
+    color-scheme: dark;
+    --bg: #111827;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    --card: #1f2937;
+    --border: #374151;
+    --shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+html[data-tema="escuro"] body {
+    background: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+html[data-tema="escuro"] .main-content,
+html[data-tema="escuro"] .card-stat,
+html[data-tema="escuro"] .mini-card,
+html[data-tema="escuro"] .insight-item,
+html[data-tema="escuro"] .list-group-item,
+html[data-tema="escuro"] .bg-light {
+    background: var(--card) !important;
+    color: var(--text) !important;
+}
+
+html[data-tema="escuro"] .report-panel {
+    background: #1f2937 !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+html[data-tema="escuro"] .mini-card,
+html[data-tema="escuro"] .insight-item,
+html[data-tema="escuro"] .list-group-item,
+html[data-tema="escuro"] .table,
+html[data-tema="escuro"] .table th,
+html[data-tema="escuro"] .table td {
+    border-color: var(--border) !important;
+}
+
+html[data-tema="escuro"] .text-secondary,
+html[data-tema="escuro"] .text-dark {
+    color: var(--muted) !important;
+}
+
+html[data-tema="escuro"] .form-control,
+html[data-tema="escuro"] .form-select {
+    background-color: #111827;
+    color: var(--text);
+    border-color: var(--border);
+}
+
+html[data-tema="escuro"] .form-control::placeholder {
+    color: var(--muted);
+}
+
+html[data-tema="escuro"] .portfolio-ring::before {
+    background: var(--card);
+}
+
+html[data-tema="escuro"] .invest-chart {
+    background: #111827 !important;
+    border-color: var(--border) !important;
+}
+
+html[data-tema="escuro"] .invest-chart text {
+    fill: var(--muted);
+}
+
+html[data-tema="escuro"] .invest-chart g[stroke] {
+    stroke: #4b5563;
+}
+
+html[data-tema="escuro"] .form-signin {
+    background: #1f2937 !important;
+    color: var(--text);
+}
+
+html[data-tema="escuro"] .form-signin h1,
+html[data-tema="escuro"] .form-signin label {
+    color: var(--text);
+}
+
+html[data-tema="escuro"] .tema-login {
+    color: #fff;
+}
+
+.tema-login {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+}
+
+.tema-botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    text-align: left;
+}
+
+.tema-botao:hover,
+.tema-botao:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.tema-botao:focus-visible {
+    outline: 2px solid #93c5fd;
+    outline-offset: 2px;
+}
+
+.tema-trilho {
+    position: relative;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 24px;
+    border-radius: 999px;
+    background: #64748b;
+    transition: background-color 0.2s ease;
+}
+
+.tema-trilho::after {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    content: "";
+    transition: transform 0.2s ease;
+}
+
+.tema-botao[aria-checked="true"] .tema-trilho {
+    background: #2563eb;
+}
+
+.tema-botao[aria-checked="true"] .tema-trilho::after {
+    transform: translateX(18px);
+}
+
+.tema-login {
+    width: auto;
+    padding: 0.75rem 1rem;
+    background: #fff;
+    color: #0f172a;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+}
+
+.tema-login:hover,
+.tema-login:focus-visible {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+html[data-tema="escuro"] .tema-login {
+    background: #1f2937;
+    color: #fff;
+}
+
+html[data-tema="escuro"] .tema-login:hover,
+html[data-tema="escuro"] .tema-login:focus-visible {
+    background: #374151;
+}
+
 @media (max-width: 991px) {
     .layout {
         flex-direction: column;
@@ -181,5 +353,44 @@ body {
 
     .report-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 992px) {
+    .layout {
+        padding-left: 280px !important;
+    }
+
+    .sidebar {
+        position: fixed !important;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1030;
+        height: 100vh;
+        min-height: 0;
+        overflow-y: auto;
+        flex-shrink: 0;
+    }
+}
+
+@media (max-width: 991px) {
+    .layout {
+        padding-left: 0 !important;
+    }
+
+    .sidebar {
+        position: relative !important;
+        height: auto;
+        overflow: visible;
+    }
+
+    .sidebar [data-botao-tema] {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 1030;
+        width: auto !important;
+        margin: 0 !important;
     }
 }

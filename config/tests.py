@@ -8,6 +8,8 @@ from django.core.cache import cache
 from django.test import TestCase
 from django.urls import reverse
 
+from model.perfil_financeiro import PerfilFinanceiro
+
 
 class TestesDeAutenticacao(TestCase):
     def test_paginas_financeiras_pedem_login(self):
@@ -29,10 +31,100 @@ class TestesDeAutenticacao(TestCase):
             },
         )
 
-        self.assertRedirects(resposta, reverse('dashboard'))
+        self.assertRedirects(resposta, reverse('questionario'))
         usuario = get_user_model().objects.get(email='ana@example.com')
         self.assertTrue(usuario.check_password('Sup3r!Secure#Pass890'))
-        self.assertEqual(self.client.get(reverse('dashboard')).status_code, 200)
+        self.assertEqual(self.client.get(reverse('questionario')).status_code, 200)
+
+    def test_dashboard_tem_botao_de_troca_de_tema(self):
+        usuario = get_user_model().objects.create_user(
+            username='ana@example.com',
+            email='ana@example.com',
+            password='Sup3r!Secure#Pass890',
+        )
+        PerfilFinanceiro.objects.create(
+            usuario=usuario,
+            renda_mensal='5000.00',
+            despesas_mensais='3000.00',
+            investimentos='10000.00',
+            objetivo='reserva',
+        )
+        self.client.force_login(usuario)
+
+        resposta = self.client.get(reverse('dashboard'))
+
+        self.assertContains(resposta, 'data-botao-tema')
+        self.assertContains(resposta, 'role="switch"')
+        self.assertContains(resposta, 'bi-moon-stars-fill')
+
+    def test_questionario_personaliza_dashboard(self):
+        usuario = get_user_model().objects.create_user(
+            username='ana@example.com',
+            email='ana@example.com',
+            password='Sup3r!Secure#Pass890',
+        )
+        self.client.force_login(usuario)
+
+        resposta = self.client.post(
+            reverse('questionario'),
+            {
+                'renda_mensal': '5000.00',
+                'despesas_mensais': '3200.00',
+                'investimentos': '12000.00',
+                'objetivo': 'casa',
+            },
+        )
+
+        self.assertRedirects(resposta, reverse('dashboard'))
+        perfil = PerfilFinanceiro.objects.get(usuario=usuario)
+        self.assertEqual(perfil.renda_mensal, 5000)
+        resposta = self.client.get(reverse('dashboard'))
+        self.assertContains(resposta, 'R$ 5.000,00')
+        self.assertContains(resposta, 'R$ 3.200,00')
+        self.assertContains(resposta, 'R$ 1.800,00')
+        self.assertContains(resposta, 'Comprar uma casa')
+
+    def test_dashboard_sem_perfil_abre_questionario(self):
+        usuario = get_user_model().objects.create_user(
+            username='ana@example.com',
+            email='ana@example.com',
+            password='Sup3r!Secure#Pass890',
+        )
+        self.client.force_login(usuario)
+
+        resposta = self.client.get(reverse('dashboard'))
+
+        self.assertRedirects(resposta, reverse('questionario'))
+
+    def test_usuario_pode_atualizar_respostas(self):
+        usuario = get_user_model().objects.create_user(
+            username='ana@example.com',
+            email='ana@example.com',
+            password='Sup3r!Secure#Pass890',
+        )
+        PerfilFinanceiro.objects.create(
+            usuario=usuario,
+            renda_mensal='5000.00',
+            despesas_mensais='3000.00',
+            investimentos='10000.00',
+            objetivo='reserva',
+        )
+        self.client.force_login(usuario)
+
+        resposta = self.client.post(
+            reverse('questionario'),
+            {
+                'renda_mensal': '6000.00',
+                'despesas_mensais': '3500.00',
+                'investimentos': '15000.00',
+                'objetivo': 'investir',
+            },
+        )
+
+        self.assertRedirects(resposta, reverse('dashboard'))
+        perfil = PerfilFinanceiro.objects.get(usuario=usuario)
+        self.assertEqual(perfil.renda_mensal, 6000)
+        self.assertEqual(perfil.objetivo, 'investir')
 
     def test_senhas_diferentes_nao_criam_conta(self):
         resposta = self.client.post(
@@ -49,11 +141,25 @@ class TestesDeAutenticacao(TestCase):
         self.assertFalse(get_user_model().objects.filter(email='ana@example.com').exists())
 
     def test_login_e_sair(self):
-        get_user_model().objects.create_user(
+        usuario = get_user_model().objects.create_user(
             username='ana@example.com',
             email='ana@example.com',
             password='Sup3r!Secure#Pass890',
         )
+
+        resposta = self.client.post(
+            reverse('entrar'),
+            {'email': 'ana@example.com', 'senha': 'Sup3r!Secure#Pass890'},
+        )
+        self.assertRedirects(resposta, reverse('questionario'))
+        PerfilFinanceiro.objects.create(
+            usuario=usuario,
+            renda_mensal='5000.00',
+            despesas_mensais='3000.00',
+            investimentos='10000.00',
+            objetivo='reserva',
+        )
+        self.client.logout()
 
         resposta = self.client.post(
             reverse('entrar'),
