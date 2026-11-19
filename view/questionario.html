@@ -9,51 +9,83 @@
     <link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
-    <button type="button" class="tema-botao tema-login" data-botao-tema role="switch" aria-label="Tema escuro" aria-checked="false">
-        <span class="tema-trilho" aria-hidden="true"></span>
-        <i class="bi bi-moon-stars-fill" data-icone-tema aria-hidden="true"></i>
-        <span>Tema escuro</span>
-    </button>
-
     <main class="onboarding-layout">
-        <section class="onboarding-card">
-            <div class="onboarding-aside">
-                <span class="auth-brand"><i class="bi bi-wallet2" aria-hidden="true"></i>Finanboard</span>
-                <div>
-                    <span class="onboarding-step">PERSONALIZAÇÃO · 1 DE 1</span>
-                    <h1>Um painel que começa com a sua realidade.</h1>
-                    <p>Com algumas estimativas, você já consegue visualizar seu orçamento de um jeito mais claro.</p>
+        <section class="onboarding-card profile-card">
+            <div class="onboarding-aside profile-aside">
+                <div class="profile-aside-top">
+                    <a href="{% url 'dashboard' %}" class="auth-brand text-decoration-none text-white">
+                        <i class="bi bi-wallet2" aria-hidden="true"></i>Finanboard
+                    </a>
+                    <button type="button" class="tema-botao tema-auth" data-botao-tema role="switch" aria-label="Tema escuro" aria-checked="false">
+                        <span class="tema-trilho" aria-hidden="true"></span>
+                        <i class="bi bi-moon-stars-fill" data-icone-tema aria-hidden="true"></i>
+                        <span>Tema escuro</span>
+                    </button>
                 </div>
-                <div class="onboarding-privacy">
-                    <i class="bi bi-shield-check me-2" aria-hidden="true"></i>
-                    Apenas estimativas. Nenhuma conexão com seu banco.
+                <div class="profile-aside-message">
+                    <span class="onboarding-step">{% if editando %}SEU PERFIL · ATUALIZAÇÃO{% else %}PERSONALIZAÇÃO · 1 DE 1{% endif %}</span>
+                    <h1>{% if editando %}Seu dinheiro muda. Seu painel também.{% else %}Um painel que começa com a sua realidade.{% endif %}</h1>
+                    <p>{% if editando %}Atualize seus valores quando quiser para manter os resumos alinhados com o momento atual.{% else %}Com algumas estimativas, você já consegue visualizar sua vida financeira de um jeito mais claro.{% endif %}</p>
+                </div>
+                <div class="profile-aside-bottom">
+                    <div class="profile-aside-icon"><i class="bi bi-shield-lock" aria-hidden="true"></i></div>
+                    <div>
+                        <strong>Seus dados são privados</strong>
+                        <p class="mb-0">As respostas ficam salvas na sua conta. Não acessamos seu banco.</p>
+                    </div>
                 </div>
             </div>
             <div class="onboarding-form">
-                <div class="mb-4">
-                    <p class="text-primary fw-semibold mb-2">SEU PERFIL FINANCEIRO</p>
-                    <h2 class="h3 mb-2">Vamos personalizar seu painel</h2>
-                    <p class="text-secondary mb-0">Valores aproximados já são suficientes. Você poderá mudar tudo depois.</p>
+                <div class="profile-form-heading">
+                    <div>
+                        <p class="text-primary fw-semibold mb-2">{% if editando %}PREFERÊNCIAS DA CONTA{% else %}SEU PERFIL FINANCEIRO{% endif %}</p>
+                        <h2 class="h3 mb-2">{% if editando %}Editar meu perfil{% else %}Vamos personalizar seu painel{% endif %}</h2>
+                        <p class="text-secondary mb-0">{% if editando %}Altere os campos que mudaram e salve suas novas estimativas.{% else %}Valores aproximados já são suficientes. Você poderá mudar tudo depois.{% endif %}</p>
+                    </div>
+                    {% if editando %}
+                        <a class="profile-back-link" href="{% url 'dashboard' %}" aria-label="Voltar ao painel">
+                            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                        </a>
+                    {% endif %}
                 </div>
                 <form method="post">
                     {% csrf_token %}
-                    {% for campo in formulario %}
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
-                            {{ campo }}
-                            {% if campo.help_text %}
-                                <div class="form-text">{{ campo.help_text }}</div>
-                            {% endif %}
-                            {% for erro in campo.errors %}
-                                <div class="text-danger small mt-1">{{ erro }}</div>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
+                    <div class="profile-fields">
+                        {% for campo in formulario %}
+                            <div class="profile-field{% if campo.name == 'objetivo' %} profile-field-wide{% endif %}">
+                                <label class="form-label fw-semibold" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+                                {% if campo.name == 'renda_mensal' or campo.name == 'despesas_mensais' or campo.name == 'investimentos' %}
+                                    <div class="input-group profile-money-input">
+                                        <span class="input-group-text">R$</span>
+                                        {{ campo }}
+                                    </div>
+                                {% else %}
+                                    {{ campo }}
+                                {% endif %}
+                                {% if campo.help_text %}
+                                    <div class="form-text">{{ campo.help_text }}</div>
+                                {% endif %}
+                                {% for erro in campo.errors %}
+                                    <div class="text-danger small mt-1">{{ erro }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
                     {% if formulario.non_field_errors %}
                         <div class="alert alert-danger" role="alert">{{ formulario.non_field_errors }}</div>
                     {% endif %}
-                    <p class="small text-secondary"><i class="bi bi-lock me-1" aria-hidden="true"></i>São estimativas informadas por você; o sistema não acessa sua conta bancária.</p>
-                    <button type="submit" class="btn btn-primary w-100 py-3">Salvar e abrir meu painel <i class="bi bi-arrow-right ms-2" aria-hidden="true"></i></button>
+                    <div class="profile-form-footer">
+                        <p class="small text-secondary mb-0"><i class="bi bi-info-circle me-1" aria-hidden="true"></i>São estimativas, não movimentações bancárias.</p>
+                        <div class="profile-form-actions">
+                            {% if editando %}
+                                <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancelar</a>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary px-4 py-3">
+                                {% if editando %}Salvar alterações{% else %}Salvar e abrir meu painel{% endif %}
+                                <i class="bi bi-arrow-right ms-2" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </section>

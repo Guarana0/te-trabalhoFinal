@@ -144,9 +144,15 @@ class FormularioPerfilFinanceiro(forms.ModelForm):
             'investimentos': 'Quanto já tem investido?',
             'objetivo': 'Qual é seu principal objetivo financeiro?',
         }
+        help_texts = {
+            'renda_mensal': 'Salário e outras entradas em um mês comum.',
+            'despesas_mensais': 'Uma estimativa do que costuma gastar por mês.',
+            'investimentos': 'O valor aproximado da sua carteira hoje.',
+            'objetivo': 'Escolha o que mais importa para você neste momento.',
+        }
         widgets = {
-            'renda_mensal': forms.NumberInput(attrs={'min': '0', 'step': '0.01', 'class': 'form-control'}),
-            'despesas_mensais': forms.NumberInput(attrs={'min': '0', 'step': '0.01', 'class': 'form-control'}),
-            'investimentos': forms.NumberInput(attrs={'min': '0', 'step': '0.01', 'class': 'form-control'}),
+            'renda_mensal': forms.NumberInput(attrs={'min': '0', 'step': '0.01', 'class': 'form-control form-control-lg'}),
+            'despesas_mensais': forms.NumberInput(attrs={'min': '0', 'step': '0.01', 'class': 'form-control form-control-lg'}),
+            'investimentos': forms.NumberInput(attrs={'min': '0', 'step': '0.01', 'class': 'form-control form-control-lg'}),
             'objetivo': forms.Select(attrs={'class': 'form-select'}),
         }

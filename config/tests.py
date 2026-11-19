@@ -166,6 +166,45 @@ class TestesDeAutenticacao(TestCase):
 
         self.assertRedirects(resposta, reverse('questionario'))
 
+    def test_questionario_novo_tem_textos_de_personalizacao_inicial(self):
+        usuario = get_user_model().objects.create_user(
+            username='ana@example.com',
+            email='ana@example.com',
+            password='Sup3r!Secure#Pass890',
+        )
+        self.client.force_login(usuario)
+
+        resposta = self.client.get(reverse('questionario'))
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertFalse(resposta.context['editando'])
+        self.assertContains(resposta, 'Vamos personalizar seu painel')
+        self.assertContains(resposta, 'Salvar e abrir meu painel')
+
+    def test_questionario_de_perfil_existente_mostra_modo_edicao_e_valores(self):
+        usuario = get_user_model().objects.create_user(
+            username='ana@example.com',
+            email='ana@example.com',
+            password='Sup3r!Secure#Pass890',
+        )
+        PerfilFinanceiro.objects.create(
+            usuario=usuario,
+            renda_mensal='5000.00',
+            despesas_mensais='3000.00',
+            investimentos='10000.00',
+            objetivo='reserva',
+        )
+        self.client.force_login(usuario)
+
+        resposta = self.client.get(reverse('questionario'))
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertTrue(resposta.context['editando'])
+        self.assertContains(resposta, 'Editar meu perfil')
+        self.assertContains(resposta, 'Salvar alterações')
+        self.assertContains(resposta, 'value="5000.00"')
+        self.assertContains(resposta, 'value="3000.00"')
+
     def test_usuario_pode_atualizar_respostas(self):
         usuario = get_user_model().objects.create_user(
             username='ana@example.com',

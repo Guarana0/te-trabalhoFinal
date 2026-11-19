@@ -815,6 +815,12 @@ html[data-tema="escuro"] .tema-login {
     box-shadow: 0 28px 80px rgba(27, 44, 75, .12);
 }
 
+.profile-card {
+    width: min(100%, 1120px);
+    min-height: 0;
+    grid-template-columns: .72fr 1.28fr;
+}
+
 .onboarding-aside {
     display: flex;
     flex-direction: column;
@@ -824,6 +830,63 @@ html[data-tema="escuro"] .tema-login {
         radial-gradient(ellipse at 90% 15%, rgba(107, 233, 199, .17), transparent 34%),
         linear-gradient(150deg, #162840, #244763);
     color: white;
+}
+
+.profile-aside {
+    min-height: 650px;
+}
+
+.profile-aside-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.profile-aside .tema-auth {
+    position: static;
+    flex: 0 0 auto;
+    width: auto;
+    padding: .4rem;
+}
+
+.profile-aside-message {
+    margin: 3rem 0;
+}
+
+.profile-aside-message h1 {
+    max-width: 430px;
+}
+
+.profile-aside-bottom {
+    display: flex;
+    align-items: flex-start;
+    gap: .85rem;
+    border-top: 1px solid rgba(255,255,255,.16);
+    padding-top: 1.25rem;
+}
+
+.profile-aside-bottom strong {
+    display: block;
+    margin-bottom: .2rem;
+    font-size: .9rem;
+}
+
+.profile-aside-bottom p {
+    margin: 0;
+    font-size: .82rem;
+}
+
+.profile-aside-icon {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    place-items: center;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 12px;
+    background: rgba(255,255,255,.08);
+    color: #a7f0db;
 }
 
 .onboarding-aside h1 {
@@ -856,6 +919,96 @@ html[data-tema="escuro"] .tema-login {
     padding: clamp(1.5rem, 4vw, 3.4rem);
 }
 
+.profile-form-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.7rem;
+}
+
+.profile-form-heading h2 {
+    color: var(--text);
+    font-weight: 760;
+    letter-spacing: -.045em;
+}
+
+.profile-back-link {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.profile-back-link:hover {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.profile-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem 1rem;
+}
+
+.profile-field {
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--card), var(--bg) 26%);
+    padding: 1rem;
+}
+
+.profile-field-wide {
+    grid-column: 1 / -1;
+}
+
+.profile-field .form-label {
+    margin-bottom: .55rem;
+    color: var(--text);
+    font-size: .9rem;
+}
+
+.profile-field .form-text {
+    margin-top: .5rem;
+    color: var(--muted);
+    font-size: .78rem;
+}
+
+.profile-money-input .input-group-text {
+    border-color: var(--border);
+    border-radius: 11px 0 0 11px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-weight: 750;
+}
+
+.profile-money-input .form-control {
+    min-width: 0;
+    border-radius: 0 11px 11px 0;
+    font-size: 1.08rem;
+    font-weight: 700;
+}
+
+.profile-form-footer {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.profile-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: .7rem;
+}
+
 .onboarding-form .form-label {
     color: var(--text);
 }
@@ -867,6 +1020,16 @@ html[data-tema="escuro"] .mini-stat {
 
 html[data-tema="escuro"] .market-pick-code {
     background: #253250;
+}
+
+html[data-tema="escuro"] .profile-field {
+    background: #1d2b40;
+}
+
+html[data-tema="escuro"] .profile-money-input .input-group-text {
+    border-color: var(--border);
+    background: #253250;
+    color: #b6c4ff;
 }
 
 html[data-tema="escuro"] .metric-icon-purple {
@@ -953,8 +1116,72 @@ html[data-tema="escuro"] .tema-login:focus-visible {
         min-height: 300px;
     }
 
+    .profile-aside {
+        min-height: 360px;
+    }
+
+    .profile-aside-message {
+        margin: 2rem 0;
+    }
+
     .onboarding-form {
         padding: 1.5rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .profile-card {
+        border-radius: 20px;
+    }
+
+    .profile-aside {
+        min-height: 330px;
+        padding: 1.35rem;
+    }
+
+    .profile-aside .auth-brand {
+        gap: .45rem;
+        font-size: 1rem;
+    }
+
+    .profile-aside .auth-brand .bi {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+    }
+
+    .profile-aside .tema-auth {
+        gap: .4rem;
+        padding: .35rem;
+    }
+
+    .profile-aside .tema-auth > span:not(.tema-trilho) {
+        display: none;
+    }
+
+    .profile-aside-message h1 {
+        font-size: 2.15rem;
+    }
+
+    .profile-form-heading {
+        margin-bottom: 1.2rem;
+    }
+
+    .profile-fields {
+        grid-template-columns: 1fr;
+        gap: .75rem;
+    }
+
+    .profile-field-wide {
+        grid-column: auto;
+    }
+
+    .profile-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .profile-form-actions .btn {
+        width: 100%;
     }
 }
 

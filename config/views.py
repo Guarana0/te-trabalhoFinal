@@ -161,7 +161,14 @@ def questionario(request):
             return redirect(destino)
         return redirect('dashboard')
 
-    return render(request, 'questionario.html', {'formulario': formulario})
+    return render(
+        request,
+        'questionario.html',
+        {
+            'formulario': formulario,
+            'editando': perfil is not None,
+        },
+    )
 
 
 def _formatar_real(valor):
