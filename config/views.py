@@ -510,6 +510,23 @@ def excluir_investimento(request, investimento_id):
     return redirect('investimentos')
 
 
+def _destaques_b3(ativos):
+    destaques = []
+    for ativo in ativos:
+        try:
+            variacao = float(ativo.get('change'))
+            preco = float(ativo.get('close'))
+        except (TypeError, ValueError):
+            continue
+        if variacao > 0 and preco > 0:
+            destaques.append({**ativo, 'variacao_numero': variacao, 'preco_numero': preco})
+    return sorted(
+        destaques,
+        key=lambda ativo: ativo['variacao_numero'],
+        reverse=True,
+    )[:3]
+
+
 @require_http_methods(['GET', 'POST'])
 def investimentos(request):
     investimento_edicao = None
@@ -593,6 +610,7 @@ def investimentos(request):
             'formulario': formulario,
             'edit_id': investimento_edicao.pk if investimento_edicao else None,
             'ativos_b3': ativos,
+            'destaques_b3': _destaques_b3(ativos),
             'erro_cotacoes': erro_cotacoes,
             'consulta_cotacoes': timezone.localtime(),
             'carteira': Paginator(carteira, 20).get_page(request.GET.get('pagina')),

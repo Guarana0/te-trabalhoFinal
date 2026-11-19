@@ -7,103 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="./assets/style.css">
-    <style>
-        body {
-            min-height: 100vh;
-            background: #f4f7fb;
-            margin: 0;
-            display: block;
-        }
-
-        .layout {
-            display: flex;
-            min-height: 100vh;
-            width: 100%;
-        }
-
-        .sidebar {
-            width: 280px;
-            min-height: 100vh;
-            background: linear-gradient(180deg, #111827 0%, #1f2937 100%);
-            padding: 1.5rem 1rem;
-            color: white;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-        }
-
-        .card-stat {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-        }
-
-        .nav-link {
-            border-radius: 10px;
-            color: rgba(255,255,255,0.8);
-        }
-
-        .nav-link.active {
-            background-color: rgba(255,255,255,0.12);
-            color: #fff;
-        }
-
-        .nav-link:hover {
-            background-color: rgba(255,255,255,0.08);
-            color: #fff;
-        }
-
-        .report-panel {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-        }
-
-        .report-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1rem;
-        }
-
-        .insight-item {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 10px;
-        }
-
-        .report-list {
-            list-style: none;
-            padding: 0;
-            margin: 1rem 0 0;
-        }
-
-        .report-list li {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .report-badge {
-            padding: 0.25rem 0.5rem;
-            border-radius: 10px;
-            font-size: 0.875rem;
-        }
-
-        .report-badge.success {
-            background-color: #d1e7dd;
-            color: #0f5132;
-        }
-
-        .report-badge.warning {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-    </style>
 </head>
 <body data-page="dashboard">
     <div class="layout">
@@ -171,12 +74,13 @@
 
         <main class="main-content">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
+                <div class="dashboard-welcome">
                     <p class="text-secondary mb-1">Painel financeiro</p>
                     <h1 class="h3 mb-0">Bem-vindo, {{ request.user.first_name|default:request.user.email }}</h1>
+                    <span class="dashboard-date"><i class="bi bi-calendar3 me-2" aria-hidden="true"></i>Seu resumo financeiro</span>
                 </div>
                 <div class="d-flex align-items-center gap-2">
-                    <a href="{% url 'questionario' %}" class="btn btn-outline-primary">Editar meu perfil</a>
+                    <a href="{% url 'questionario' %}" class="btn btn-outline-primary"><i class="bi bi-sliders me-2" aria-hidden="true"></i>Editar meu perfil</a>
                 </div>
             </div>
 
@@ -185,7 +89,7 @@
                     <div class="card card-stat h-100 p-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="text-secondary">Saldo mensal estimado</span>
-                            <i class="bi bi-wallet fs-4 text-primary"></i>
+                            <span class="metric-icon metric-icon-blue"><i class="bi bi-wallet2" aria-hidden="true"></i></span>
                         </div>
                         <h2 class="mt-3 mb-0">{{ saldo_mensal }}</h2>
                         <small class="text-secondary">Receita menos despesas informadas</small>
@@ -196,7 +100,7 @@
                     <div class="card card-stat h-100 p-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="text-secondary">Receita mensal</span>
-                            <i class="bi bi-arrow-up-circle fs-4 text-success"></i>
+                            <span class="metric-icon metric-icon-green"><i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
                         </div>
                         <h2 class="mt-3 mb-0">{{ renda_mensal }}</h2>
                         <small class="text-secondary">{{ origem_receita }}</small>
@@ -207,7 +111,7 @@
                     <div class="card card-stat h-100 p-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="text-secondary">Despesas mensais</span>
-                            <i class="bi bi-arrow-down-circle fs-4 text-danger"></i>
+                            <span class="metric-icon metric-icon-red"><i class="bi bi-arrow-down-right" aria-hidden="true"></i></span>
                         </div>
                         <h2 class="mt-3 mb-0">{{ despesas_mensais }}</h2>
                         <small class="text-secondary">{{ origem_despesas }}</small>
@@ -218,7 +122,7 @@
                     <div class="card card-stat h-100 p-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="text-secondary">Investimentos</span>
-                            <i class="bi bi-graph-up-arrow fs-4 text-warning"></i>
+                            <span class="metric-icon metric-icon-purple"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></span>
                         </div>
                         <h2 class="mt-3 mb-0">{{ investimentos }}</h2>
                         <small class="text-secondary">{{ origem_investimentos }}</small>

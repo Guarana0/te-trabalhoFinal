@@ -107,20 +107,88 @@
                 {% endfor %}
             {% endif %}
 
-            <section class="card card-stat p-4 mb-4">
+            <section class="market-intro p-4 p-md-5 mb-4">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
                     <div>
-                        <h2 class="h5 mb-1">Cotações de referência da B3</h2>
-                        <small class="text-secondary">
-                            Fonte: <a href="https://brapi.dev/" target="_blank" rel="noopener noreferrer">BrAPI</a>.
-                            Preços de fechamento, que podem estar atrasados.
-                        </small>
+                        <span class="badge rounded-pill text-bg-light mb-3"><i class="bi bi-activity me-1" aria-hidden="true"></i> MERCADO B3</span>
+                        <h2 class="display-6 fw-bold mb-2">Invista com informação.</h2>
+                        <p class="mb-0">Acompanhe preços de referência e movimentos recentes dos ativos brasileiros.</p>
                     </div>
-                    <small class="text-secondary">Consulta em {{ consulta_cotacoes|date:"d/m/Y H:i" }}</small>
+                    <div class="market-stat">
+                        <span class="small text-secondary">Última consulta</span>
+                        <strong>{{ consulta_cotacoes|date:"d/m · H:i" }}</strong>
+                        <small class="text-secondary">Fonte: BrAPI</small>
+                    </div>
                 </div>
                 {% if erro_cotacoes %}
                     <div class="alert alert-warning" role="alert">{{ erro_cotacoes }}</div>
                 {% endif %}
+                {% if ativos_b3 %}
+                    <div class="d-flex flex-wrap gap-3 mt-4">
+                        <div class="market-stat">
+                            <span class="small text-secondary">Ativos acompanhados</span>
+                            <strong>{{ ativos_b3|length }}</strong>
+                        </div>
+                        <div class="market-stat">
+                            <span class="small text-secondary">Cotações de fechamento</span>
+                            <strong><i class="bi bi-clock-history me-1" aria-hidden="true"></i>Referência</strong>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-secondary mb-0">As cotações não estão disponíveis no momento. Sua carteira continua acessível abaixo.</p>
+                {% endif %}
+            </section>
+
+            <section class="mb-4">
+                <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-3">
+                    <div>
+                        <p class="page-kicker mb-1">MOVIMENTO DO DIA</p>
+                        <h2 class="h4 mb-1">Destaques para pesquisar</h2>
+                        <p class="text-secondary mb-0">Ativos com variação positiva entre os símbolos acompanhados.</p>
+                    </div>
+                    <span class="badge rounded-pill text-bg-light">Destaques de desempenho — não são recomendações de compra</span>
+                </div>
+                {% if destaques_b3 %}
+                    <div class="row g-3">
+                        {% for ativo in destaques_b3 %}
+                            <div class="col-md-4">
+                                <article class="market-pick">
+                                    <div class="d-flex justify-content-between align-items-start gap-2">
+                                        <div>
+                                            <span class="market-pick-code">{{ ativo.stock }}</span>
+                                            <h3 class="h6 mt-3 mb-1">{{ ativo.name }}</h3>
+                                            <p class="market-note mb-0">{{ ativo.subsector|default:ativo.sector|default:"Ativo da B3" }}</p>
+                                        </div>
+                                        <span class="market-change-positive"><i class="bi bi-arrow-up-right me-1" aria-hidden="true"></i>{{ ativo.variacao_numero|floatformat:2 }}%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-end mt-4 pt-3 border-top">
+                                        <span class="market-note">Fechamento consultado</span>
+                                        <strong>R$ {{ ativo.preco_numero|floatformat:2 }}</strong>
+                                    </div>
+                                </article>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card card-stat p-4">
+                        <p class="text-secondary mb-0">Não há variações positivas disponíveis neste momento entre os ativos acompanhados.</p>
+                    </div>
+                {% endif %}
+                <p class="market-note mt-3 mb-0">
+                    Destaques ordenados pela variação diária positiva, não consideram seu perfil nem prevêem retornos.
+                    Consulte riscos, fundamentos e custos antes de qualquer decisão. Cotações fornecidas pela
+                    <a href="https://brapi.dev/" target="_blank" rel="noopener noreferrer">BrAPI</a> e podem estar atrasadas.
+                </p>
+            </section>
+
+            <section class="card card-stat p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                    <div>
+                        <h2 class="h5 mb-1">Cotações acompanhadas</h2>
+                        <small class="text-secondary">Preços de fechamento; não são cotações em tempo real.</small>
+                    </div>
+                    <a class="btn btn-outline-primary btn-sm" href="https://brapi.dev/" target="_blank" rel="noopener noreferrer">Conhecer a fonte</a>
+                </div>
                 {% if ativos_b3 %}
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
@@ -149,7 +217,7 @@
                         </table>
                     </div>
                 {% else %}
-                    <p class="text-secondary mb-0">As cotações não estão disponíveis no momento. Sua carteira continua acessível abaixo.</p>
+                    <p class="text-secondary mb-0">Sem cotações disponíveis. Tente atualizar mais tarde.</p>
                 {% endif %}
             </section>
 

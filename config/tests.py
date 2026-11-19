@@ -299,6 +299,31 @@ class TestesDeCotacoes(TestCase):
         self.assertEqual(resposta.status_code, 200)
         self.assertContains(resposta, 'Não foi possível carregar as cotações agora')
 
+    @patch('config.views.urlopen')
+    def test_mostra_destaques_com_base_na_maior_variacao_positiva(self, abrir_api):
+        abrir_api.return_value = BytesIO(
+            json.dumps(
+                {
+                    'stocks': [
+                        {'stock': 'PETR4', 'name': 'Petrobras', 'close': 39.5, 'change': 2.3, 'sector': 'Energia'},
+                        {'stock': 'VALE3', 'name': 'Vale', 'close': 58.2, 'change': 1.1, 'sector': 'Mineração'},
+                        {'stock': 'ITUB4', 'name': 'Itaú', 'close': 35.1, 'change': -0.4, 'sector': 'Financeiro'},
+                        {'stock': 'B3SA3', 'name': 'B3', 'close': 13.2, 'change': 3.7, 'sector': 'Financeiro'},
+                    ]
+                }
+            ).encode()
+        )
+
+        resposta = self.client.get(reverse('investimentos'))
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(
+            [ativo['stock'] for ativo in resposta.context['destaques_b3']],
+            ['B3SA3', 'PETR4', 'VALE3'],
+        )
+        self.assertContains(resposta, 'Destaques para pesquisar')
+        self.assertContains(resposta, 'não são recomendações de compra')
+
 
 class TestesDeDespesas(TestCase):
     def setUp(self):

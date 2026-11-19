@@ -15,42 +15,48 @@
         <span>Tema escuro</span>
     </button>
 
-    <main class="container py-5">
-        <div class="card card-stat mx-auto p-4 p-md-5" style="max-width: 680px;">
-            <p class="text-primary mb-2">Só mais um passo</p>
-            <h1 class="h3 mb-2">Vamos personalizar seu painel</h1>
-            <p class="text-secondary mb-4">
-                Responda com valores aproximados. Eles serão usados para calcular um resumo mensal no seu dashboard.
-            </p>
-
-            <form method="post">
-                {% csrf_token %}
-
-                {% for campo in formulario %}
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
-                        {{ campo }}
-                        {% if campo.help_text %}
-                            <div class="form-text">{{ campo.help_text }}</div>
-                        {% endif %}
-                        {% for erro in campo.errors %}
-                            <div class="text-danger small mt-1">{{ erro }}</div>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-
-                {% if formulario.non_field_errors %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ formulario.non_field_errors }}
-                    </div>
-                {% endif %}
-
-                <p class="small text-secondary">
-                    São apenas estimativas informadas por você; o sistema não acessa sua conta bancária.
-                </p>
-                <button type="submit" class="btn btn-primary w-100">Salvar e abrir meu painel</button>
-            </form>
-        </div>
+    <main class="onboarding-layout">
+        <section class="onboarding-card">
+            <div class="onboarding-aside">
+                <span class="auth-brand"><i class="bi bi-wallet2" aria-hidden="true"></i>Finanboard</span>
+                <div>
+                    <span class="onboarding-step">PERSONALIZAÇÃO · 1 DE 1</span>
+                    <h1>Um painel que começa com a sua realidade.</h1>
+                    <p>Com algumas estimativas, você já consegue visualizar seu orçamento de um jeito mais claro.</p>
+                </div>
+                <div class="onboarding-privacy">
+                    <i class="bi bi-shield-check me-2" aria-hidden="true"></i>
+                    Apenas estimativas. Nenhuma conexão com seu banco.
+                </div>
+            </div>
+            <div class="onboarding-form">
+                <div class="mb-4">
+                    <p class="text-primary fw-semibold mb-2">SEU PERFIL FINANCEIRO</p>
+                    <h2 class="h3 mb-2">Vamos personalizar seu painel</h2>
+                    <p class="text-secondary mb-0">Valores aproximados já são suficientes. Você poderá mudar tudo depois.</p>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for campo in formulario %}
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+                            {{ campo }}
+                            {% if campo.help_text %}
+                                <div class="form-text">{{ campo.help_text }}</div>
+                            {% endif %}
+                            {% for erro in campo.errors %}
+                                <div class="text-danger small mt-1">{{ erro }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    {% if formulario.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">{{ formulario.non_field_errors }}</div>
+                    {% endif %}
+                    <p class="small text-secondary"><i class="bi bi-lock me-1" aria-hidden="true"></i>São estimativas informadas por você; o sistema não acessa sua conta bancária.</p>
+                    <button type="submit" class="btn btn-primary w-100 py-3">Salvar e abrir meu painel <i class="bi bi-arrow-right ms-2" aria-hidden="true"></i></button>
+                </form>
+            </div>
+        </section>
     </main>
 
     <script src="./assets/script.js"></script>
